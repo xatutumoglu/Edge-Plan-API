@@ -14,7 +14,7 @@ public class TokenMiddleware
         if (!string.IsNullOrWhiteSpace(token) && sessionService.IsTokenBlacklisted(token))
         {
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            await context.Response.WriteAsync("Token is blacklisted");
+            await context.Response.WriteAsync("Token.Is.Black.Listed");
             return;
         }
 

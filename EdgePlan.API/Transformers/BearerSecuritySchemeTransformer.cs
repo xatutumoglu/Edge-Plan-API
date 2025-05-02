@@ -1,8 +1,6 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+
 using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.OpenApi;        
+using Microsoft.AspNetCore.OpenApi;        // AddOpenApi ile ilişkili namespace
 
 namespace EdgePlan.API.Transformers
 {

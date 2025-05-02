@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using EdgePlan.API.Services;
 using EdgePlan.API.Transformers;
 using EdgePlan.Data.Postgre;
 
@@ -39,6 +40,7 @@ builder.Services.AddDbContext<ApplicationPostgreContext>(options =>
 
 //Services
 builder.Services.AddScoped<SessionService>();
+builder.Services.AddScoped<TokenService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
