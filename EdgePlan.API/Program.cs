@@ -6,6 +6,7 @@ using System.Text;
 using EdgePlan.API.Services;
 using EdgePlan.API.Transformers;
 using EdgePlan.Data.Postgre;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,7 +44,11 @@ builder.Services.AddScoped<SessionService>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<TargetService>();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
+});
+
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddOpenApi(options =>
