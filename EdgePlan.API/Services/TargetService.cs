@@ -29,8 +29,8 @@ public class TargetService
         try
         {
              _context.Targets.Add(target);
-             await _context.SaveChangesAsync(cancellationToken);
-            return target;
+             await _context.SaveChangesAsync(cancellationToken); 
+             return target;
         }
         catch (Exception)
         {
@@ -40,10 +40,12 @@ public class TargetService
 
     public async Task<List<Target>> GetAllAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return await _context.Targets
+        var entity =  await _context.Targets
             .AsNoTracking()
             .Where(x => x.UserId == id)
             .ToListAsync(cancellationToken);
+        
+        return entity;
     }
 
     public async Task<Target> GetByIdAsync(Guid userId, Guid targetId, CancellationToken cancellationToken = default)

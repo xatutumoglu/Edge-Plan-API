@@ -25,7 +25,4 @@ public class Target
     public DateTime CreatedAt { get; set; }
 
     public DateTime? ChangedAt { get; set; }
-
-    [ForeignKey("UserId")]
-    public User User { get; set; } = null!;
 }

@@ -17,22 +17,23 @@ public class TargetController : ControllerBase
     {
         _targetService = targetService;
     }
-    
+
     [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreateAsync(TargetCreateModel model, CancellationToken cancellationToken = default)
     {
         var sessionId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        var result = await _targetService.CreateAsync(model, sessionId,cancellationToken);
+        var result = await _targetService.CreateAsync(model, sessionId, cancellationToken);
         
-        return Created(string.Empty, result);   
+        return Created(string.Empty, result);    
     }
-    
+
     [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken = default)
     {
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        
         var result = await _targetService.GetAllAsync(userId, cancellationToken);
         return Ok(result);  
     }
@@ -42,6 +43,7 @@ public class TargetController : ControllerBase
     public async Task<IActionResult> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        
         var result = await _targetService.GetByIdAsync(userId, id, cancellationToken);
         return Ok(result);      
     }
@@ -51,9 +53,9 @@ public class TargetController : ControllerBase
     public async Task<IActionResult> UpdateAsync(TargetUpdateModel model, Guid id, CancellationToken cancellationToken)
     {
         var sessionId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        var result = await _targetService.UpdateAsync(model, id, sessionId, cancellationToken);
         
-        return Ok(result);
+        await _targetService.UpdateAsync(model, id, sessionId, cancellationToken);
+        return NoContent();
     }
 
     [Authorize]
@@ -61,7 +63,8 @@ public class TargetController : ControllerBase
     public async Task<IActionResult> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var sessionId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-        var result = await _targetService.DeleteAsync(sessionId, id, cancellationToken);
-        return Ok();
+        
+        await _targetService.DeleteAsync(sessionId, id, cancellationToken);
+        return NoContent();
     }
 }

@@ -20,8 +20,9 @@ public class SessionController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> RegisterAsync(UserRegisterRequestModel model, CancellationToken cancellationToken = default)
     {
-        var result = await _sessionService.RegisterAsync(model, cancellationToken);
-        return Created(string.Empty, result);
+        await _sessionService.RegisterAsync(model, cancellationToken);
+
+        return Created();
     }
 
     [AllowAnonymous]
@@ -29,6 +30,7 @@ public class SessionController : ControllerBase
     public async Task<IActionResult> LoginAsync(UserLoginRequestModel model, CancellationToken cancellationToken = default)
     {
         var result = await _sessionService.LoginAsync(model, cancellationToken);
+        
         return Ok(result);
     }
     
@@ -42,6 +44,6 @@ public class SessionController : ControllerBase
         if (!string.IsNullOrEmpty(token))
             sessionService.BlacklistToken(token, TimeSpan.FromMinutes(30));
 
-        return Ok(new { message = "Logged Out" });
+        return NoContent();
     }
 }
