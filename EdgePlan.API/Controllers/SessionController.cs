@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EdgePlan.API.Controllers;
 
-
+[Tags("Session")]
 [ApiController]
 [Route("api/[controller]")]
 public class SessionController : ControllerBase
@@ -25,7 +25,7 @@ public class SessionController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpPost]
+    [HttpPost("login")]
     public async Task<IActionResult> LoginAsync(UserLoginRequestModel model, CancellationToken cancellationToken = default)
     {
         var result = await _sessionService.LoginAsync(model, cancellationToken);

@@ -51,14 +51,14 @@ public class SessionService
     public async Task<UserLoginResponseModel> LoginAsync(UserLoginRequestModel model, CancellationToken cancellationToken = default)
     {
         var user = await _context.Users
-                       .FirstOrDefaultAsync(x => x.Email == model.Email)
-                   ?? throw new Exception();
+                       .FirstOrDefaultAsync(x => x.Email == model.Email) 
+                   ?? throw new UnauthorizedAccessException("Invalid.Password.Or.Email.Or.Inactive.User.Try.Again.Or.Contact.Administrator.");
 
         var hasher = new PasswordHasher<User>();
         var verifyResult = hasher.VerifyHashedPassword(user, user.PasswordHash, model.Password);
 
         if (verifyResult == PasswordVerificationResult.Failed)
-            throw new Exception();
+            throw new UnauthorizedAccessException("Invalid.Password.Or.Email.Or.Inactive.User.Try.Again.Or.Contact.Administrator.");
 
         var token = _tokenService.GenerateToken(user);
         return new UserLoginResponseModel

@@ -36,11 +36,12 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddMemoryCache();
 
 builder.Services.AddDbContext<ApplicationPostgreContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("Postgre")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 //Services
 builder.Services.AddScoped<SessionService>();
 builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<TargetService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
