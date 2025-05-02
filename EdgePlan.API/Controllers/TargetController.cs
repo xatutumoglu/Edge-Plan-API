@@ -48,7 +48,7 @@ public class TargetController : ControllerBase
     
     [Authorize]
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> UpdateAsync(TargetUpdateModel model, [FromQuery] Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateAsync(TargetUpdateModel model, Guid id, CancellationToken cancellationToken)
     {
         var sessionId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
         var result = await _targetService.UpdateAsync(model, id, sessionId, cancellationToken);

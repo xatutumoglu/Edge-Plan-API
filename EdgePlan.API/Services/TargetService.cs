@@ -57,7 +57,29 @@ public class TargetService
 
     public async Task<Target> UpdateAsync(TargetUpdateModel model, Guid id, Guid sessionId, CancellationToken cancellationToken = default)
     {
-        return null;
+        var entity = await _context.Targets
+            .FirstOrDefaultAsync(x => x.Id == id && x.UserId == sessionId, cancellationToken);
+        
+        if (entity == null)
+            throw new Exception("Target.Not.Found");
+        
+        entity.Text = model.Text;
+        entity.DeadLine = model.DeadLine.ToUniversalTime();
+        entity.Status = model.Status;
+        entity.ChangedAt = DateTime.UtcNow.ToUniversalTime();
+        
+        try
+        {
+            _context.Targets.Update(entity);
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+        
+        catch (Exception)
+        {
+            throw new Exception("Error.Try.Again.Or.Contact.Administrator");
+        }
+        
+        return entity;
     }
 
     public async Task<Target> DeleteAsync(Guid userId, Guid targetId, CancellationToken cancellationToken = default)
