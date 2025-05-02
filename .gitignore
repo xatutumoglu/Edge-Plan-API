@@ -1,0 +1,42 @@
+## .NET Build Artifacts
+bin/
+obj/
+*.db
+*.db-journal
+
+## Rider / JetBrains IDE
+.idea/
+*.sln.iml
+*.DotSettings.user
+
+## VS Code (eğer kullanıyorsan)
+.vscode/
+
+## User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Logs & Dumps
+*.log
+*.dmp
+
+## OS artifacts
+.DS_Store
+Thumbs.db
+
+## ASP.NET config (optional - local overrides)
+appsettings.Development.json
+appsettings.Local.json
+launchSettings.json
+
+## Entity Framework Migrations Snapshots
+Migrations/*Snapshot.cs
+
+## Optional: Ignore test coverage reports
+coverage/
+*.lcov
+
+## Optional: Ignore packages (if not using PackageReference)
+packages/
