@@ -29,7 +29,6 @@ Thumbs.db
 ## ASP.NET config (optional - local overrides)
 appsettings.Development.json
 appsettings.Local.json
-launchSettings.json
 
 ## Entity Framework Migrations Snapshots
 Migrations/*Snapshot.cs

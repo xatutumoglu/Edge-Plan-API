@@ -10,6 +10,16 @@ using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://127.0.0.1:5500")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 builder.Services.AddAuthentication(options =>
     {
@@ -59,6 +69,8 @@ builder.Services.AddOpenApi(options =>
 builder.Services.AddAuthorizationBuilder();
 
 var app = builder.Build();
+
+app.UseCors("AllowFrontend");
 
 if (app.Environment.IsDevelopment())
 {
