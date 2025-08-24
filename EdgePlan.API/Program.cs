@@ -7,6 +7,10 @@ using EdgePlan.API.Services;
 using EdgePlan.API.Transformers;
 using EdgePlan.Data.Postgre;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Hangfire;
+using Hangfire.PostgreSql;
+using EdgePlan.API.Settings;
+using EdgePlan.API.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,6 +58,29 @@ builder.Services.AddScoped<SessionService>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<TargetService>();
 
+// Email Configuration
+
+builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection("Email"));
+builder.Services.AddScoped<IEmailSender, SMTPMailSender>();
+builder.Services.AddScoped<NotificationService>();
+
+// Hangfire
+builder.Services.AddHangfire(config =>
+{
+    config
+        .UseSimpleAssemblyNameTypeSerializer()
+        .UseRecommendedSerializerSettings()
+        .UsePostgreSqlStorage(
+            builder.Configuration.GetConnectionString("DefaultConnection"),
+            new PostgreSqlStorageOptions
+            {
+                SchemaName = "hangfire"
+            });
+});
+
+builder.Services.AddHangfireServer();
+builder.Services.AddScoped<NotificationService>();
+
 builder.Services.AddControllers(options =>
 {
     options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
@@ -85,6 +112,9 @@ if (app.Environment.IsDevelopment())
 app.UseAuthentication();
 app.UseMiddleware<TokenMiddleware>();
 app.UseAuthorization();
+
+app.UseHangfireDashboard("/hangfire");
+
 
 app.MapControllers();
 app.MapGet("/", () => Results.Redirect("/scalar/v1")).ExcludeFromDescription();

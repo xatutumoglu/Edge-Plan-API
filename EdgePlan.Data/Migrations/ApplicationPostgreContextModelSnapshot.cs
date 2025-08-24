@@ -17,7 +17,7 @@ namespace EdgePlan.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.4")
+                .HasAnnotation("ProductVersion", "9.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -89,13 +89,11 @@ namespace EdgePlan.Data.Migrations
 
             modelBuilder.Entity("EdgePlan.Data.Entity.Target", b =>
                 {
-                    b.HasOne("EdgePlan.Data.Entity.User", "User")
+                    b.HasOne("EdgePlan.Data.Entity.User", null)
                         .WithMany("Targets")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("EdgePlan.Data.Entity.User", b =>

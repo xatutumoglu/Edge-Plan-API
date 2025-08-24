@@ -2,6 +2,7 @@ using EdgePlan.API.Services;
 using EdgePlan.Data.Entity;
 using EdgePlan.Data.Models;
 using EdgePlan.Data.Postgre;
+using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -11,12 +12,14 @@ public class SessionService
     private readonly IMemoryCache _memoryCache;
     private readonly ApplicationPostgreContext _context;
     private readonly TokenService _tokenService;
+    private readonly IBackgroundJobClient _jobs;
     
-    public SessionService(IMemoryCache memoryCache, ApplicationPostgreContext context, TokenService tokenService)
+    public SessionService(IMemoryCache memoryCache, ApplicationPostgreContext context, TokenService tokenService, IBackgroundJobClient jobs)
     {
         _memoryCache = memoryCache;
         _context = context;
         _tokenService = tokenService;
+        _jobs = jobs;
     }
     
     public async Task<UserRegisterResponseModel> RegisterAsync(UserRegisterRequestModel model, CancellationToken cancellationToken = default)
@@ -40,7 +43,10 @@ public class SessionService
 
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
-
+        
+        _jobs.Enqueue<NotificationService>(svc => 
+            svc.SendWelcomeEmailAsync(user.Id, CancellationToken.None));
+        
         var token = _tokenService.GenerateToken(user);
         return new UserRegisterResponseModel
         {
